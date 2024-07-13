@@ -1,1 +1,1 @@
-# aws-auth
+# Hatkom AWS Auth Client

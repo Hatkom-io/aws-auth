@@ -1,0 +1,26 @@
+{
+  "name": "@hatkom/aws-auth",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rm -rf ./dist && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaxSchmide/aws-auth.git"
+  },
+  "author": "Max Schmide",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaxSchmide/aws-auth/issues"
+  },
+  "homepage": "https://github.com/MaxSchmide/aws-auth#readme",
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@types/node": "^20.14.10",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "amazon-cognito-identity-js": "6.3.12"
+  }
+}
