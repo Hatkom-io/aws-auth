@@ -1,7 +1,6 @@
 {
   "name": "@hatkom/aws-auth",
   "version": "1.0.0",
-  "private": false,
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -rf ./dist && tsc"
@@ -11,7 +10,11 @@
     "url": "git+https://github.com/MaxSchmide/aws-auth.git"
   },
   "author": "Max Schmide",
-  "license": "ISC",
+  "license": "MIT",
+  "keywords": [
+    "AWS",
+    "auth"
+  ],
   "bugs": {
     "url": "https://github.com/MaxSchmide/aws-auth/issues"
   },
