@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MaxSchmide/aws-auth.git"
+    "url": "git+https://github.com/Hatkom-io/aws-auth.git"
   },
   "author": "Max Schmide",
   "license": "MIT",
@@ -16,9 +16,9 @@
     "auth"
   ],
   "bugs": {
-    "url": "https://github.com/MaxSchmide/aws-auth/issues"
+    "url": "https://github.com/Hatkom-io/aws-auth/issues"
   },
-  "homepage": "https://github.com/MaxSchmide/aws-auth#readme",
+  "homepage": "https://github.com/Hatkom-io/aws-auth#readme",
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@types/node": "^20.14.10",
