@@ -16,6 +16,11 @@ type ForgotPasswordSubmitArgs = {
   password: string
 }
 
+type VerifyUserEmailArgs = {
+  username: string
+  code: string
+}
+
 export class AWSAuthClient {
   private userPool: CognitoUserPool
 
@@ -40,6 +45,15 @@ export class AWSAuthClient {
     } catch (error) {
       console.error('SignOut error', { extra: JSON.stringify(error) })
     }
+  }
+
+  verifyUserEmail = ({ username, code }: VerifyUserEmailArgs) => {
+    return new Promise((resolve, reject) => {
+      this.cognitoUser(username).verifyAttribute('email', code, {
+        onSuccess: resolve,
+        onFailure: reject,
+      })
+    })
   }
 
   forgotPassword = (username: string) => {
