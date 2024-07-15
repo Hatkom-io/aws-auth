@@ -1,0 +1,1 @@
+export { AWSAuthClient } from './auth';
