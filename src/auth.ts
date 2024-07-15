@@ -49,9 +49,14 @@ export class AWSAuthClient {
 
   verifyUserEmail = ({ username, code }: VerifyUserEmailArgs) => {
     return new Promise((resolve, reject) => {
-      this.cognitoUser(username).verifyAttribute('email', code, {
-        onSuccess: resolve,
-        onFailure: reject,
+      this.cognitoUser(username).confirmRegistration(code, true, (error) => {
+        if (error) {
+          reject(error)
+
+          return
+        }
+
+        resolve(true)
       })
     })
   }
