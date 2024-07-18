@@ -47,6 +47,20 @@ export class AWSAuthClient {
     }
   }
 
+  resendVerificationCode = (username: string) => {
+    return new Promise((resolve, reject) => {
+      this.cognitoUser(username).resendConfirmationCode((err, result) => {
+        if (err) {
+          reject(err)
+
+          return
+        }
+
+        resolve(result)
+      })
+    })
+  }
+
   verifyUserEmail = ({ username, code }: VerifyUserEmailArgs) => {
     return new Promise((resolve, reject) => {
       this.cognitoUser(username).confirmRegistration(code, true, (error) => {
