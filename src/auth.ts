@@ -18,7 +18,11 @@ type ForgotPasswordSubmitArgs = {
 
 type VerifyUserEmailArgs = {
   username: string
-  code: string
+  /**
+   * @deprecated Use {@link VerifyUserEmailArgs.(verificationCode:1)} instead
+   */
+  code?: string
+  verificationCode: string
 }
 
 export class AWSAuthClient {
@@ -61,17 +65,31 @@ export class AWSAuthClient {
     })
   }
 
-  verifyUserEmail = ({ username, code }: VerifyUserEmailArgs) => {
+  verifyUserEmail = ({
+    username,
+    code,
+    verificationCode,
+  }: VerifyUserEmailArgs) => {
+    if (code) {
+      console.warn(
+        'The `code` parameter is deprecated. Please use `verificationCode` instead.',
+      )
+    }
+
     return new Promise((resolve, reject) => {
-      this.cognitoUser(username).confirmRegistration(code, true, (error) => {
-        if (error) {
-          reject(error)
+      this.cognitoUser(username).confirmRegistration(
+        code ?? verificationCode,
+        true,
+        (error) => {
+          if (error) {
+            reject(error)
 
-          return
-        }
+            return
+          }
 
-        resolve(true)
-      })
+          resolve(true)
+        },
+      )
     })
   }
 
