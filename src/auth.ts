@@ -21,17 +21,44 @@ type VerifyUserEmailArgs = {
   code: string
 }
 
+type CognitoPoolWithAsyncStorage = CognitoUserPool & {
+  storage: { sync: (callback: unknown) => void }
+}
+
+const needsToSyncStorage = (
+  userPool: CognitoUserPool,
+): userPool is CognitoPoolWithAsyncStorage =>
+  !!(
+    'storage' in userPool &&
+    typeof userPool.storage === 'function' &&
+    'sync' in userPool.storage &&
+    typeof userPool.storage.sync === 'function'
+  )
+
 export class AWSAuthClient {
   private userPool: CognitoUserPool
+  private syncStoragePromise: Promise<void>
 
   constructor(UserPoolId: string, ClientId: string) {
     this.userPool = new CognitoUserPool({
       UserPoolId,
       ClientId,
     })
+
+    this.syncStoragePromise = new Promise((resolve) => {
+      if (needsToSyncStorage(this.userPool)) {
+        this.userPool.storage.sync(resolve)
+
+        return
+      }
+
+      resolve()
+    })
   }
 
   signOut = async () => {
+    await this.syncStoragePromise
+
     const user = this.userPool.getCurrentUser()
 
     if (!user) {
@@ -47,7 +74,9 @@ export class AWSAuthClient {
     }
   }
 
-  resendVerificationCode = (username: string) => {
+  resendVerificationCode = async (username: string) => {
+    await this.syncStoragePromise
+
     return new Promise((resolve, reject) => {
       this.cognitoUser(username).resendConfirmationCode((err, result) => {
         if (err) {
@@ -61,7 +90,9 @@ export class AWSAuthClient {
     })
   }
 
-  verifyUserEmail = ({ username, code }: VerifyUserEmailArgs) => {
+  verifyUserEmail = async ({ username, code }: VerifyUserEmailArgs) => {
+    await this.syncStoragePromise
+
     return new Promise((resolve, reject) => {
       this.cognitoUser(username).confirmRegistration(code, true, (error) => {
         if (error) {
@@ -75,7 +106,9 @@ export class AWSAuthClient {
     })
   }
 
-  forgotPassword = (username: string) => {
+  forgotPassword = async (username: string) => {
+    await this.syncStoragePromise
+
     return new Promise((resolve, reject) => {
       this.cognitoUser(username).forgotPassword({
         onSuccess: resolve,
@@ -84,11 +117,13 @@ export class AWSAuthClient {
     })
   }
 
-  forgotPasswordSubmit = ({
+  forgotPasswordSubmit = async ({
     username,
     verificationCode,
     password,
   }: ForgotPasswordSubmitArgs) => {
+    await this.syncStoragePromise
+
     return new Promise((resolve, reject) => {
       this.cognitoUser(username).confirmPassword(verificationCode, password, {
         onSuccess: resolve,
@@ -97,7 +132,9 @@ export class AWSAuthClient {
     })
   }
 
-  authenticateUser = ({ email, password }: AuthenticateUserArgs) => {
+  authenticateUser = async ({ email, password }: AuthenticateUserArgs) => {
+    await this.syncStoragePromise
+
     const authenticationDetails = new AuthenticationDetails({
       Username: email,
       Password: password,
@@ -117,6 +154,8 @@ export class AWSAuthClient {
   }
 
   getCurrentSessionToken = async () => {
+    await this.syncStoragePromise
+
     const currentUser = this.userPool.getCurrentUser()
 
     if (!currentUser) {
