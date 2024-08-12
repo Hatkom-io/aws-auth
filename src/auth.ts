@@ -21,6 +21,11 @@ type VerifyUserEmailArgs = {
   code: string
 }
 
+type CompleteNewPasswordChallengeArgs = {
+  username: string
+  newPassword: string
+}
+
 type CognitoPoolWithAsyncStorage = CognitoUserPool & {
   storage: { sync: (callback: unknown) => void }
 }
@@ -72,6 +77,18 @@ export class AWSAuthClient {
     } catch (error) {
       console.error('SignOut error', { extra: JSON.stringify(error) })
     }
+  }
+
+  completeNewPasswordChallenge = ({
+    username,
+    newPassword,
+  }: CompleteNewPasswordChallengeArgs) => {
+    return new Promise((resolve, reject) => {
+      this.cognitoUser(username).completeNewPasswordChallenge(newPassword, [], {
+        onSuccess: resolve,
+        onFailure: reject,
+      })
+    })
   }
 
   resendVerificationCode = async (username: string) => {
