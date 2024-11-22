@@ -15,6 +15,9 @@
     "AWS",
     "auth"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
     "url": "https://github.com/Hatkom-io/aws-auth/issues"
   },

@@ -40,7 +40,7 @@ const needsToSyncStorage = (
     typeof userPool.storage.sync === 'function'
   )
 
-export class AWSAuthClient {
+class AWSAuthClient {
   private userPool: CognitoUserPool
   private syncStoragePromise: Promise<void>
 
@@ -237,3 +237,5 @@ export class AWSAuthClient {
     }
   })()
 }
+
+export { AWSAuthClient, CognitoUserSession }

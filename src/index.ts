@@ -1,1 +1,1 @@
-export { AWSAuthClient } from './auth'
+export { AWSAuthClient, CognitoUserSession } from './auth'
