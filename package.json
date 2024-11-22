@@ -1,6 +1,6 @@
 {
   "name": "@hatkom/aws-auth",
-  "version": "1.4.0",
+  "version": "0.0.0-development",
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -rf ./dist && tsc"
