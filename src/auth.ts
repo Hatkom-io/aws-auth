@@ -226,7 +226,7 @@ class AWSAuthClient {
     let user: CognitoUser | undefined
 
     return (username: string) => {
-      if (!user) {
+      if (!user || user.getUsername() !== username) {
         user = new CognitoUser({
           Username: username,
           Pool: this.userPool,
