@@ -24,9 +24,9 @@
   },
   "homepage": "https://github.com/Hatkom-io/aws-auth#readme",
   "devDependencies": {
-    "@biomejs/biome": "^2.2.2",
-    "@types/node": "^24.3.0",
-    "typescript": "^5.9.2"
+    "@biomejs/biome": "^2.2.5",
+    "@types/node": "^24.7.0",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "amazon-cognito-identity-js": "^6.3.15"
