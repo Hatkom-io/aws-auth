@@ -25,7 +25,7 @@
   "homepage": "https://github.com/Hatkom-io/aws-auth#readme",
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
-    "@types/node": "^24.10.1",
+    "@types/node": "^24.10.2",
     "typescript": "^5.9.3"
   },
   "dependencies": {
