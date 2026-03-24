@@ -1,3 +1,10 @@
+## [1.4.5](https://github.com/Hatkom-io/aws-auth/compare/v1.4.4...v1.4.5) (2026-03-24)
+
+
+### Bug Fixes
+
+* tsconfig compiled wrong build ([39e3ced](https://github.com/Hatkom-io/aws-auth/commit/39e3ced05748674598b2502c3703fc318332265b))
+
 ## [1.4.4](https://github.com/Hatkom-io/aws-auth/compare/v1.4.3...v1.4.4) (2026-03-24)
 
 
