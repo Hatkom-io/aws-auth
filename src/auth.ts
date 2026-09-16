@@ -1,5 +1,8 @@
 import {
   AuthenticationDetails,
+  CognitoAccessToken,
+  CognitoIdToken,
+  CognitoRefreshToken,
   CognitoUser,
   CognitoUserPool,
   CognitoUserSession,
@@ -26,6 +29,15 @@ type CompleteNewPasswordChallengeArgs = {
   newPassword: string
 }
 
+type AdoptSessionArgs = {
+  username: string
+  idToken: string
+  accessToken: string
+  refreshToken: string
+}
+
+type TokenUse = 'access' | 'id'
+
 type CognitoPoolWithAsyncStorage = CognitoUserPool & {
   storage: { sync: (callback: unknown) => void }
 }
@@ -39,6 +51,9 @@ const needsToSyncStorage = (
     'sync' in userPool.storage &&
     typeof userPool.storage.sync === 'function'
   )
+
+const getToken = (session: CognitoUserSession, tokenUse: TokenUse) =>
+  tokenUse === 'id' ? session.getIdToken() : session.getAccessToken()
 
 class AWSAuthClient {
   private userPool: CognitoUserPool
@@ -170,7 +185,24 @@ class AWSAuthClient {
     )
   }
 
-  getCurrentSessionToken = async () => {
+  adoptSession = async ({
+    username,
+    idToken,
+    accessToken,
+    refreshToken,
+  }: AdoptSessionArgs) => {
+    await this.syncStoragePromise
+
+    this.cognitoUser(username).setSignInUserSession(
+      new CognitoUserSession({
+        IdToken: new CognitoIdToken({ IdToken: idToken }),
+        AccessToken: new CognitoAccessToken({ AccessToken: accessToken }),
+        RefreshToken: new CognitoRefreshToken({ RefreshToken: refreshToken }),
+      }),
+    )
+  }
+
+  getCurrentSessionToken = async (tokenUse: TokenUse = 'access') => {
     await this.syncStoragePromise
 
     const currentUser = this.userPool.getCurrentUser()
@@ -191,10 +223,12 @@ class AWSAuthClient {
       )
     })
 
-    const valid = this.isValid(session.getAccessToken().getExpiration())
+    const currentToken = getToken(session, tokenUse)
+
+    const valid = this.isValid(currentToken.getExpiration())
 
     if (valid) {
-      return session.getAccessToken().getJwtToken()
+      return currentToken.getJwtToken()
     }
 
     const updatedSession = await new Promise<CognitoUserSession>(
@@ -212,7 +246,7 @@ class AWSAuthClient {
       },
     )
 
-    return updatedSession.getAccessToken().getJwtToken()
+    return getToken(updatedSession, tokenUse).getJwtToken()
   }
 
   private isValid = (tokenExpiration: number) => {
