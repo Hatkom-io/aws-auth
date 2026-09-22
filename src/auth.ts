@@ -85,13 +85,17 @@ class AWSAuthClient {
       return
     }
 
-    try {
-      await new Promise<void>((resolve) => {
-        user.signOut(resolve)
+    return new Promise<void>((resolve, reject) => {
+      user.signOut((error?: Error) => {
+        if (error) {
+          reject(error)
+
+          return
+        }
+
+        resolve()
       })
-    } catch (error) {
-      console.error('SignOut error', { extra: JSON.stringify(error) })
-    }
+    })
   }
 
   completeNewPasswordChallenge = ({

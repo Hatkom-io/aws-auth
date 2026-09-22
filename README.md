@@ -25,7 +25,7 @@ const idToken = await auth.getCurrentSessionToken('id')
 // Adopt a session obtained elsewhere (e.g. a server-mediated sign-in)
 await auth.adoptSession({ username, idToken, accessToken, refreshToken })
 
-// Sign out
+// Sign out. Rejects when Cognito did not acknowledge the revocation
 await auth.signOut()
 ```
 
@@ -34,12 +34,26 @@ await auth.signOut()
 - `authenticateUser({ email, password })` — sign in, returns session or `'new-password-required'`
 - `getCurrentSessionToken(tokenUse?)` — returns the current JWT, refreshing if needed. `tokenUse` is `'access'` (default) or `'id'`
 - `adoptSession({ username, idToken, accessToken, refreshToken })` — store a session obtained outside the browser, so the SDK handles renewal, revocation and storage from then on
-- `signOut()` — signs out the current user
+- `signOut()` — signs out the current user; rejects when the refresh token revocation failed
 - `completeNewPasswordChallenge({ username, newPassword })` — complete a new password challenge
 - `forgotPassword(username)` — initiate forgot password flow
 - `forgotPasswordSubmit({ username, verificationCode, password })` — submit new password
 - `resendVerificationCode(username)` — resend email verification code
 - `verifyUserEmail({ username, code })` — confirm email registration
+
+### `signOut`
+
+Rejects when the revocation failed, so a caller that must guarantee the session ended has
+something to catch. Two distinct failures reach the same rejection:
+
+- the SDK could not refresh the session before revoking it — it returns **without clearing its
+  cached tokens**, so the refresh token is live both remotely and locally
+- the `RevokeToken` call itself failed — the SDK clears its cached tokens first, so storage is
+  empty while the refresh token stays usable at Cognito until it expires
+
+Emptied storage therefore says nothing about whether the remote session ended; only a resolved
+`signOut()` does. Sign-out flows that navigate away should still do so on rejection, after
+handling the local tokens themselves.
 
 ### `adoptSession`
 
