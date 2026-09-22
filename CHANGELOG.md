@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/Hatkom-io/aws-auth/compare/v1.5.0...v1.5.1) (2026-09-22)
+
+
+### Bug Fixes
+
+* handle error on signOut ([01d5500](https://github.com/Hatkom-io/aws-auth/commit/01d55009fa5982701ef1b2dfb1ce5d49db06d624))
+
 # [1.5.0](https://github.com/Hatkom-io/aws-auth/compare/v1.4.5...v1.5.0) (2026-09-16)
 
 
