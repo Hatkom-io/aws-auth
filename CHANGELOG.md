@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/Hatkom-io/aws-auth/compare/v1.4.5...v1.5.0) (2026-09-16)
+
+
+### Features
+
+* adopt external session, select token use ([3b70040](https://github.com/Hatkom-io/aws-auth/commit/3b700408cf5e3675b330073eb867524c458ccd1b))
+
 ## [1.4.5](https://github.com/Hatkom-io/aws-auth/compare/v1.4.4...v1.4.5) (2026-03-24)
 
 
